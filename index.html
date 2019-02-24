@@ -14,12 +14,25 @@
         body {
             background-color: Black
         }
+        #myProgress {
+            width: 100%;
+            background-color: #ddd;
+        }
+
+        #myBar {
+            width: 0;
+            height: 30px;
+            background-color: #4CAF50;
+        }
     </style>
 </head>
 <body onclick="startTimer()">
 
 <div style="height: 90vh" onclick="">
     <p id="totalTime"></p>
+    <div id="myProgress">
+        <div id="myBar"></div>
+    </div>
     <p id="symbol"></p>
 </div>
 

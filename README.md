@@ -16,3 +16,5 @@ Customise with URL query parameters. Touch or click screen to start.
 e.g.
 
 `index.html?symbols=a,b,c&interval=2&totalTime=10`
+
+Loading bar taken from [w3schools.com](https://www.w3schools.com/howto/howto_js_progressbar.asp)
