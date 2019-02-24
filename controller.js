@@ -17,16 +17,17 @@ const interval = searchParams.get('interval')
 let totalTime = searchParams.get('totalTime')
 
 let timerId
+navigator.vibrate(150);
 timerId = setInterval(() => {
     printAtId('totalTime', totalTime)
     if (totalTime === 0) {
         clearInterval(timerId)
         printAtId(symbolId, '')
-        window.navigator.vibrate([200,30,200,30,200]);
+        navigator.vibrate([150,30,150,30,150]);
     }
     else if (totalTime % interval === 0) {
         printAtId(symbolId, getRandom(symbols))
-        window.navigator.vibrate(200);
+        navigator.vibrate(150);
     }
     totalTime--
 }, 1000);
