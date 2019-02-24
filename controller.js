@@ -15,7 +15,6 @@ let totalTime = searchParams.get('totalTime')
 
 const startTimer = () => {
     let timerId
-    vibrate()
     timerId = setInterval(() => {
         printAtId('totalTime', totalTime)
         if (totalTime === 0) {
