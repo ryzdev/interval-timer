@@ -7,9 +7,10 @@ if (window.location.search.length === 0) {
     alert('No parameters added. Default URL params assigned')
 }
 
+const noSleep = new NoSleep()
 const symbolId = 'symbol'
-const searchParams = new URLSearchParams(window.location.search);
-const symbols = searchParams.get('symbols').split(',');
+const searchParams = new URLSearchParams(window.location.search)
+const symbols = searchParams.get('symbols').split(',')
 const interval = searchParams.get('interval')
 const disableVibration = searchParams.get('disableVibration') === 'true'
 const totalTime = Number(searchParams.get('totalTime'))
@@ -17,6 +18,7 @@ let inProgress = false
 
 const startTimer = () => {
     if (!inProgress){
+        noSleep.enable()
         inProgress = true;
         let counter = 0
         let timerId
@@ -27,6 +29,7 @@ const startTimer = () => {
                 printAtId(symbolId, '')
                 vibrate([150, 30, 150, 30, 150])
                 inProgress = false;
+                noSleep.disable();
             } else if (counter % interval === 0) {
                 printAtId(symbolId, getRandom(symbols))
                 vibrate()
