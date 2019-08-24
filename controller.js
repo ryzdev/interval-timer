@@ -13,22 +13,27 @@ const symbols = searchParams.get('symbols').split(',');
 const interval = searchParams.get('interval')
 const disableVibration = searchParams.get('disableVibration') === 'true'
 const totalTime = Number(searchParams.get('totalTime'))
+let inProgress = false
 
 const startTimer = () => {
-    let counter = 0
-    let timerId
-    timerId = setInterval(() => {
-        setProgressBar(counter, totalTime);
-        if (counter >= totalTime) {
-            clearInterval(timerId)
-            printAtId(symbolId, '')
-            vibrate([150, 30, 150, 30, 150])
-        } else if (counter % interval === 0) {
-            printAtId(symbolId, getRandom(symbols))
-            vibrate()
-        }
-        counter++
-    }, 1000);
+    if (!inProgress){
+        inProgress = true;
+        let counter = 0
+        let timerId
+        timerId = setInterval(() => {
+            setProgressBar(counter, totalTime);
+            if (counter >= totalTime) {
+                clearInterval(timerId)
+                printAtId(symbolId, '')
+                vibrate([150, 30, 150, 30, 150])
+                inProgress = false;
+            } else if (counter % interval === 0) {
+                printAtId(symbolId, getRandom(symbols))
+                vibrate()
+            }
+            counter++
+        }, 1000);
+    }
 }
 
 const vibrate = (pattern = 150) => {
