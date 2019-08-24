@@ -20,6 +20,7 @@ let inProgress = false
 const startTimer = () => {
     if (!inProgress){
         noSleep.enable()
+        toggleFullScreen()
         inProgress = true;
         let counter = 0
         let timerId
@@ -31,6 +32,7 @@ const startTimer = () => {
                 navigator.vibrate([150, 30, 150, 30, 150])
                 inProgress = false;
                 noSleep.disable();
+                toggleFullScreen()
             } else if (counter % interval === 0) {
                 printAtId(symbolId, getRandom(symbols))
                 navigator.vibrate(150)
@@ -44,5 +46,18 @@ const setProgressBar = (remaining, total) => {
     getById('myBar').style.width = Math.round(remaining / total * 100) + '%'
 };
 
+function toggleFullScreen() {
+    const doc = window.document;
+    const docEl = doc.documentElement;
 
+    const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+    const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+    if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+        requestFullScreen.call(docEl);
+    }
+    else {
+        cancelFullScreen.call(doc);
+    }
+}
 
