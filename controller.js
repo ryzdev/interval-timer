@@ -10,54 +10,65 @@ const interval = Number(searchParams.get('interval'))
 const totalTime = Number(searchParams.get('totalTime'))
 
 if (!symbols || !interval | !totalTime) {
-    alert('Required query parameters missing. Adding demo defaults.')
-    window.location.assign('index.html?symbols=a,b,c&interval=2&totalTime=10')
+    // alert('Required query parameters missing. Adding demo defaults.')
+    window.location.assign('index.html?symbols=push-up,squat,plank&interval=5&totalTime=100')
 }
 
-const symbolId = 'symbol'
+const SYMBOL_ID = 'symbol'
 let inProgress = false
 
 const startTimer = () => {
-    if (!inProgress){
+    enableFullScreen()
+    if (!inProgress) {
         noSleep.enable()
-        toggleFullScreen()
-        inProgress = true;
+        inProgress = true
         let counter = 0
         let timerId
         timerId = setInterval(() => {
-            setProgressBar(counter, totalTime);
+            setProgressBar(counter, totalTime)
             if (counter >= totalTime) {
                 clearInterval(timerId)
-                printAtId(symbolId, '')
+                printAtId(SYMBOL_ID, '')
                 navigator.vibrate([150, 30, 150, 30, 150])
-                inProgress = false;
-                noSleep.disable();
-                toggleFullScreen()
+                inProgress = false
+                noSleep.disable()
+                enableFullScreen()
             } else if (counter % interval === 0) {
-                printAtId(symbolId, getRandom(symbols))
+                let symbol = getRandom(symbols)
+                printAtId(SYMBOL_ID, symbol)
                 navigator.vibrate(150)
+                sendNotification(symbol);
             }
             counter++
-        }, 1000);
+        }, 1000)
+    }
+}
+
+function enableFullScreen() {
+    const doc = window.document
+    const docEl = doc.documentElement
+
+    const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen
+
+    if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+        requestFullScreen.call(docEl)
     }
 }
 
 const setProgressBar = (remaining, total) => {
     getById('myBar').style.width = Math.round(remaining / total * 100) + '%'
-};
-
-function toggleFullScreen() {
-    const doc = window.document;
-    const docEl = doc.documentElement;
-
-    const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
-    const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
-
-    if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-        requestFullScreen.call(docEl);
-    }
-    else {
-        cancelFullScreen.call(doc);
-    }
 }
 
+const sendNotification = symbol => {
+    if (!document.hasFocus()) {
+        Notification.requestPermission().then(() => {
+            const n = new Notification(symbol, {
+                icon: 'favicon.png',
+                body: 'Interval Timer'
+            })
+            setTimeout(n.close(), 1000)
+        })
+    }
+};
+
+// TODO: make true full-screen by removing buttons: add manifest (https://developers.google.com/web/fundamentals/native-hardware/fullscreen/)
