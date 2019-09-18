@@ -60,7 +60,6 @@ const setProgressBar = (remaining, total) => {
 }
 
 const sendNotification = symbol => {
-    if (!document.hasFocus()) {
         Notification.requestPermission().then(() => {
             const n = new Notification(symbol, {
                 icon: 'favicon.png',
@@ -68,7 +67,6 @@ const sendNotification = symbol => {
             })
             setTimeout(n.close(), 1000)
         })
-    }
 };
 
 // TODO: make true full-screen by removing buttons: add manifest (https://developers.google.com/web/fundamentals/native-hardware/fullscreen/)
