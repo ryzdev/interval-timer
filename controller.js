@@ -18,7 +18,6 @@ const SYMBOL_ID = 'symbol'
 let inProgress = false
 
 const startTimer = () => {
-    enableFullScreen()
     if (!inProgress) {
         noSleep.enable()
         inProgress = true
@@ -32,7 +31,6 @@ const startTimer = () => {
                 navigator.vibrate([150, 30, 150, 30, 150])
                 inProgress = false
                 noSleep.disable()
-                enableFullScreen()
             } else if (counter % interval === 0) {
                 let symbol = getRandom(symbols)
                 printAtId(SYMBOL_ID, symbol)
@@ -44,29 +42,14 @@ const startTimer = () => {
     }
 }
 
-function enableFullScreen() {
-    const doc = window.document
-    const docEl = doc.documentElement
-
-    const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen
-
-    if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-        requestFullScreen.call(docEl)
-    }
-}
-
 const setProgressBar = (remaining, total) => {
     getById('myBar').style.width = Math.round(remaining / total * 100) + '%'
 }
 
 const sendNotification = symbol => {
-        Notification.requestPermission().then(() => {
-            const n = new Notification(symbol, {
-                icon: 'favicon.png',
-                body: 'Interval Timer'
-            })
-            setTimeout(n.close(), 1000)
-        })
+    Notification.requestPermission().then(() => {
+        new Notification(symbol)
+    })
 };
 
 // TODO: make true full-screen by removing buttons: add manifest (https://developers.google.com/web/fundamentals/native-hardware/fullscreen/)
